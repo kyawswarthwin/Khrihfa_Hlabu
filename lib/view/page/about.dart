@@ -1,11 +1,22 @@
 import 'package:app/util/customicon.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class About extends StatelessWidget {
+ void dispose() { 
+  //  super.dispose();
+  //  about.dispose();
+ }
   @override
   Widget build(BuildContext context) {
+//     FirebaseAdMob.instance.initialize(appId: "ca-app-pub-8032453967263891~1572959323").then((response){
+// about..load()..show(
+//     anchorType: AnchorType.bottom,
+//     anchorOffset: 0.0,
+//     horizontalCenterOffset: 0.0,);
+//     });
     return Scaffold(
         body: Container(
       child: Padding(
@@ -71,3 +82,20 @@ class About extends StatelessWidget {
     ));
   }
 }
+// MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+//   keywords: <String>['flutterio', 'beautiful apps'],
+//   contentUrl: 'https://flutter.io',
+//   // birthday: DateTime.now(),
+//   childDirected: false,
+//   // designedForFamilies: false,
+//   // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+//   testDevices: <String>[], // Android emulators are considered test devices
+// );
+
+// InterstitialAd about = InterstitialAd(
+//   adUnitId: "ca-app-pub-8032453967263891/5145017606",
+//   targetingInfo: targetingInfo,
+//   listener: (MobileAdEvent event) {
+//     print("InterstitialAd event is $event");
+//   },
+// );

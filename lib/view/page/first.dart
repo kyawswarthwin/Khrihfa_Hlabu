@@ -2,6 +2,7 @@ import 'package:app/controller/controller.dart';
 import 'package:app/model/data.dart';
 import 'package:app/view/tab/firsttab1.dart';
 import 'package:app/view/tab/firsttab2.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../../util/draweselection.dart';
@@ -17,6 +18,10 @@ class First extends StatefulWidget {
 }
 
 class _FirstState extends State<First> {
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:app/model/post.dart';
 import 'package:app/view/listdetail/postdetail.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -106,6 +107,7 @@ class _ThirdState extends State<Third> {
     super.dispose();
     post.clear();
     controller.dispose();
+    // third.dispose();
     setState(() {
       loading = true;
     });
@@ -113,6 +115,12 @@ class _ThirdState extends State<Third> {
 
   @override
   Widget build(BuildContext context) {
+// FirebaseAdMob.instance.initialize(appId: "ca-app-pub-8032453967263891~1572959323").then((response){
+// third..load()..show(
+//     anchorType: AnchorType.bottom,
+//     anchorOffset: 0.0,
+//     horizontalCenterOffset: 0.0,);
+    // });
     return Scaffold(
       body:loading 
       ? 
@@ -254,3 +262,20 @@ class _ThirdState extends State<Third> {
     );
   }
 }
+// MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+//   keywords: <String>['flutterio', 'beautiful apps'],
+//   contentUrl: 'https://flutter.io',
+//   // birthday: DateTime.now(),
+//   childDirected: false,
+//   // designedForFamilies: false,
+//   // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+//   testDevices: <String>[], // Android emulators are considered test devices
+// );
+
+// InterstitialAd third = InterstitialAd(
+//   adUnitId: "ca-app-pub-8032453967263891/5145017606",
+//   targetingInfo: targetingInfo,
+//   listener: (MobileAdEvent event) {
+//     print("InterstitialAd event is $event");
+//   },
+// );

@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:app/controller/controller.dart';
 import 'package:app/model/song.dart';
 import 'package:app/util/customicon.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
-// import 'package:firebase_admob/firebase_admob.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -34,7 +36,7 @@ class _FirstDetailState extends State<FirstDetail> {
   AudioPlayer audioPlayer;
   PlayerState _playerState = PlayerState.stopped;
   get _isPlaying => _playerState == PlayerState.playing;
-  // String url = "https://luan.xyz/files/audio/nasa_on_a_mission.mp3";
+  BannerAd _bannerAd;
   @override
   void initState() {
     super.initState();
@@ -42,6 +44,7 @@ class _FirstDetailState extends State<FirstDetail> {
     getText();
     audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
     getSong();
+     _bannerAd = createBannerAdUnitId()..load();
   }
 
   getSong() {
@@ -72,6 +75,7 @@ class _FirstDetailState extends State<FirstDetail> {
   @override
   void dispose() {
     super.dispose();
+    _bannerAd.dispose();
 setState(() {
       audioPlayer.stop();
     audioPlayer.dispose();
@@ -80,9 +84,9 @@ setState(() {
 
   @override
   Widget build(BuildContext context) {
-//     FirebaseAdMob.instance.initialize(appId: "ca-app-pub-8032453967263891~1572959323").then((response){
-// myBanner..load()..show();
-//     });
+    FirebaseAdMob.instance.initialize(appId: getAppId()).then((response){
+_bannerAd..load()..show(anchorOffset: 80.0,anchorType: AnchorType.top);
+    });
     final bm = Provider.of<Control>(context);
     return Scaffold(
       appBar: AppBar(
@@ -200,7 +204,6 @@ setState(() {
           ? FancyFab(song: songs[1])
           : FloatingActionButton(
               onPressed: () {
-                // audioPlayer.stop();
               },
               child: IconButton(
                 icon: _isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
@@ -213,25 +216,43 @@ setState(() {
                   ? Colors.black
                   : Colors.white,
             ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
-// MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-//   keywords: <String>['flutterio', 'beautiful apps'],
-//   contentUrl: 'https://flutter.io',
-//   // birthday: DateTime.now(),
-//   childDirected: false,
-//   // designedForFamilies: false,
-//   // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
-//   testDevices: <String>[], // Android emulators are considered test devices
-// );
+String getAppId() {
+  if (Platform.isIOS) {
+    return "ca-app-pub-8032453967263891~9118748177";
+  } else if (Platform.isAndroid) {
+    return "ca-app-pub-8032453967263891~1572959323";
+  }
+  return null;
+}
 
-// BannerAd myBanner = BannerAd(
-//   adUnitId: BannerAd.testAdUnitId,
-//   size: AdSize.smartBanner,
-//   targetingInfo: targetingInfo,
-//   listener: (MobileAdEvent event) {
-//     print("BannerAd event is $event");
-//   },
-// );
+String getBannerAdUnitId() {
+  if (Platform.isIOS) {
+    return "ca-app-pub-8032453967263891/3339614362";
+  } else if (Platform.isAndroid) {
+    return "ca-app-pub-8032453967263891/1381387636";
+  }
+  return null;
+}
+MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  keywords: <String>['flutterio', 'beautiful apps'],
+  contentUrl: 'https://flutter.io',
+  // birthday: DateTime.now(),
+  childDirected: false,
+  // designedForFamilies: false,
+  // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+  testDevices: <String>[], // Android emulators are considered test devices
+);
+
+BannerAd createBannerAdUnitId(){
+  return BannerAd(
+  adUnitId: getBannerAdUnitId(),
+  size: AdSize.smartBanner,
+  targetingInfo: targetingInfo,
+  listener: (MobileAdEvent event) {
+    print("BannerAd event is $event");
+  },
+);
+}

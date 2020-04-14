@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:app/util/draweselection.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
@@ -18,7 +21,7 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
   DrawerSelection _drawerSelection = DrawerSelection.first;
   String appBarTitle = "Khrihfa Hlabu";
   Widget currentPage;
-
+  InterstitialAd _interstitialAd;
   @override
   void initState() {
     super.initState();
@@ -33,10 +36,10 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
       Control().createListsecond();
       Control().getShare();
     });
-    print("home init");
     Control().firstShowdata = Control().firstItemList;
     Control().secondShowData = Control().secondItemList;
-      
+      FirebaseAdMob.instance.initialize(appId: getAppId());
+    _interstitialAd = createInterstitialAd()..load();
   }
   @override
   void dispose() {
@@ -46,7 +49,6 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return 
-
       Scaffold(
         appBar: DefaultAppBar(
           title: appBarTitle,
@@ -75,6 +77,9 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
                           : Colors.transparent,
                   colorBrightness: Brightness.light,
                   onPressed: () {
+                    _interstitialAd?.dispose();
+                    _interstitialAd ??= createInterstitialAd();
+                    _interstitialAd..load()..show();
                     currentPage = First();
                     Navigator.pop(context);
                     Control().getDrawerSelection(DrawerSelection.first);
@@ -113,6 +118,9 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
                           ? Colors.white
                           : Colors.transparent,
                   onPressed: () {
+                    _interstitialAd?.dispose();
+                    _interstitialAd ??= createInterstitialAd();
+                    _interstitialAd..load()..show();
                     currentPage = Second();
                     Navigator.pop(context);
                     _drawerSelection = DrawerSelection.second;
@@ -152,6 +160,9 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
                           ? Colors.white
                           : Colors.transparent,
                   onPressed: () {
+                    _interstitialAd?.dispose();
+                    _interstitialAd ??= createInterstitialAd();
+                    _interstitialAd..load()..show();
                     currentPage = Third();
                     Navigator.pop(context);
                     _drawerSelection = DrawerSelection.third;
@@ -187,6 +198,9 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
                           ? Colors.white
                           : Colors.transparent,
                   onPressed: () {
+                    _interstitialAd?.dispose();
+                    _interstitialAd ??= createInterstitialAd();
+                    _interstitialAd..load()..show();
                     currentPage = About();
                     Navigator.pop(context);
                     _drawerSelection = DrawerSelection.about;
@@ -217,3 +231,39 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
     );
   }
 }
+String getAppId() {
+  if (Platform.isIOS) {
+    return "ca-app-pub-8032453967263891~9118748177";
+  } else if (Platform.isAndroid) {
+    return "ca-app-pub-8032453967263891~1572959323";
+  }
+  return null;
+}
+
+String getInterstitialAdUnitId() {
+  if (Platform.isIOS) {
+    return "ca-app-pub-8032453967263891/5179503167";
+  } else if (Platform.isAndroid) {
+    return "ca-app-pub-8032453967263891/5145017606";
+  }
+  return null;
+}
+
+InterstitialAd createInterstitialAd() {
+    return InterstitialAd(
+      adUnitId: getInterstitialAdUnitId(),
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        print("InterstitialAd event $event");
+      },
+    );
+  }
+MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  keywords: <String>['flutterio', 'beautiful apps'],
+  contentUrl: 'https://flutter.io',
+  // birthday: DateTime.now(),
+  childDirected: false,
+  // designedForFamilies: false,
+  // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
+  testDevices: <String>[], // Android emulators are considered test devices
+);

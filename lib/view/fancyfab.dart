@@ -2,6 +2,7 @@ import 'package:app/model/song.dart';
 import 'package:app/util/playstate.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 class FancyFab extends StatefulWidget {
   final Song song;
