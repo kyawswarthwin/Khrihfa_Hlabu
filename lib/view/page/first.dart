@@ -2,7 +2,6 @@ import 'package:app/controller/controller.dart';
 import 'package:app/model/data.dart';
 import 'package:app/view/tab/firsttab1.dart';
 import 'package:app/view/tab/firsttab2.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../../util/draweselection.dart';

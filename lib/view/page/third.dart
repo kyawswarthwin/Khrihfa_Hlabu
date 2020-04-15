@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:app/model/post.dart';
 import 'package:app/view/listdetail/postdetail.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -56,7 +55,11 @@ class _ThirdState extends State<Third> {
           datas['data']
               .map((data) => post.add(new Data.fromJson(data)))
               .toList();
-          paging = datas['paging']['next'];
+          if (datas['paging']['next'] != null) {
+            paging = datas['paging']['next'];
+          }else{
+            paging = "";
+          }
         });
       } else
         throw Exception('We were not able to successfully download json data');
@@ -115,12 +118,6 @@ class _ThirdState extends State<Third> {
 
   @override
   Widget build(BuildContext context) {
-// FirebaseAdMob.instance.initialize(appId: "ca-app-pub-8032453967263891~1572959323").then((response){
-// third..load()..show(
-//     anchorType: AnchorType.bottom,
-//     anchorOffset: 0.0,
-//     horizontalCenterOffset: 0.0,);
-    // });
     return Scaffold(
       body:loading 
       ? 
@@ -185,6 +182,7 @@ class _ThirdState extends State<Third> {
                       child: Container(
                           height: 95,
                           child: Row(
+                            // mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -198,6 +196,7 @@ class _ThirdState extends State<Third> {
                               ),
                               Flexible(
                                 child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.,
                                   children: <Widget>[
                                     Wrap(
                                       children: <Widget>[
@@ -211,7 +210,7 @@ class _ThirdState extends State<Third> {
                                       children: <Widget>[
                                         Icon(
                                           Icons.insert_invitation,
-                                          color: Colors.black54,
+                                          color:Colors.grey[700],
                                         ),
                                         SizedBox(
                                           width: 10,
@@ -222,8 +221,7 @@ class _ThirdState extends State<Third> {
                                                   .format(DateTime.parse(
                                                       post[index].time)) ??
                                               "",
-                                          style:
-                                              TextStyle(color: Colors.black54),
+                                          style: TextStyle(color: Colors.grey[700]),
                                         )
                                       ],
                                     ),
@@ -231,10 +229,11 @@ class _ThirdState extends State<Third> {
                                       children: <Widget>[
                                         Text(post[index].message ?? " ",
                                             maxLines: 1,
+                                            // textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 fontFamily: "Pyidaungsu",
                                                 fontSize: 13.5,
-                                                color: Colors.black54)),
+                                               )),
                                       ],
                                     ),
                                     SizedBox(
@@ -262,20 +261,3 @@ class _ThirdState extends State<Third> {
     );
   }
 }
-// MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-//   keywords: <String>['flutterio', 'beautiful apps'],
-//   contentUrl: 'https://flutter.io',
-//   // birthday: DateTime.now(),
-//   childDirected: false,
-//   // designedForFamilies: false,
-//   // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
-//   testDevices: <String>[], // Android emulators are considered test devices
-// );
-
-// InterstitialAd third = InterstitialAd(
-//   adUnitId: "ca-app-pub-8032453967263891/5145017606",
-//   targetingInfo: targetingInfo,
-//   listener: (MobileAdEvent event) {
-//     print("InterstitialAd event is $event");
-//   },
-// );
