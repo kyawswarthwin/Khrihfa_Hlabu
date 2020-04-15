@@ -85,12 +85,15 @@ class _PostDetailState extends State<PostDetail> {
                         
                           Wrap(
                             children: <Widget>[
-                             widget.data.name != null ? Text(
-                                widget.data.name ?? "",
-                                
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.normal),
-                              ) : Container(),
+                             widget.data.name != null ? Align(
+                               alignment: Alignment.centerLeft,
+                                                            child: Text(
+                                  widget.data.name ?? "",
+                                  
+                                  style: TextStyle(
+                                      fontSize: 20, fontWeight: FontWeight.normal),
+                                ),
+                             ) : Container(),
                             ],
                           ),
                    
@@ -121,7 +124,7 @@ class _PostDetailState extends State<PostDetail> {
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                           child: Wrap(
-                        children: <Widget>[Text(widget.data.message ?? "")],
+                        children: <Widget>[Align( alignment: Alignment.centerLeft, child: Text(widget.data.message ?? ""))],
                       )),
                     ),
                     SizedBox(

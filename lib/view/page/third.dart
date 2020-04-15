@@ -34,9 +34,9 @@ class _ThirdState extends State<Third> {
         getdata();
       }
     });
-      Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 2), () {
       setState(() {
-      loading =false;
+        loading = false;
       });
     });
   }
@@ -57,7 +57,7 @@ class _ThirdState extends State<Third> {
               .toList();
           if (datas['paging']['next'] != null) {
             paging = datas['paging']['next'];
-          }else{
+          } else {
             paging = "";
           }
         });
@@ -119,140 +119,152 @@ class _ThirdState extends State<Third> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:loading 
-      ? 
-       Container(
-                    child: Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                           boxShadow:[BoxShadow(color: Colors.black,offset: new Offset(5.0, 5.0),
-                    blurRadius: 40.0,)]
-                        ),
-                        width: 160,
-                        height: 80,
-                        child: Center(
-                            child: ListTile(
-                          leading: CircularProgressIndicator(
-                            strokeWidth: 2.0,
-                            valueColor:
-                                new AlwaysStoppedAnimation<Color>(Colors.blue),
-                          ),
-                          title: Text(
-                            "Loading...",
-                            style: TextStyle(color:Colors.black54),
-                          ),
-                        )),
-                      ),
+      body: loading
+          ? Container(
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                    BoxShadow(
+                      color: Colors.black,
+                      offset: new Offset(5.0, 5.0),
+                      blurRadius: 40.0,
+                    )
+                  ]),
+                  width: 160,
+                  height: 80,
+                  child: Center(
+                      child: ListTile(
+                    leading: CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      valueColor:
+                          new AlwaysStoppedAnimation<Color>(Colors.blue),
                     ),
-                  )
-                  :
-       RefreshIndicator(
-         color: Colors.black,
-        onRefresh: refreshdata,
-        child: internet
-            ? ListView(
-                padding: const EdgeInsets.only(top: 200),
-                children: <Widget>[
-                  Center(
-                      child: Icon(
-                    Icons.wifi_tethering,
-                    size: 70,
+                    title: Text(
+                      "Loading...",
+                      style: TextStyle(color: Colors.black54),
+                    ),
                   )),
-                  Center(
-                      child: Text(
-                    "No Connection Available",
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                  ))
-                ],
-              )
-            : 
-            new ListView.builder(
-                controller: controller,
-                itemCount: post.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(1.0),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) =>
-                                PostDetail(data: post[index])));
-                      },
-                      child: Container(
-                          height: 95,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                    height: 90,
-                                    width: 90,
-                                    child: Image.network(
-                                      post[index].picture ?? "",
-                                      fit: BoxFit.cover,
-                                    )),
-                              ),
-                              Flexible(
-                                child: Column(
+                ),
+              ),
+            )
+          : RefreshIndicator(
+              color: Colors.black,
+              onRefresh: refreshdata,
+              child: internet
+                  ? ListView(
+                      padding: const EdgeInsets.only(top: 200),
+                      children: <Widget>[
+                        Center(
+                            child: Icon(
+                          Icons.wifi_tethering,
+                          size: 70,
+                        )),
+                        Center(
+                            child: Text(
+                          "No Connection Available",
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w500),
+                        ))
+                      ],
+                    )
+                  : new ListView.builder(
+                      controller: controller,
+                      itemCount: post.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(1.0),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      PostDetail(data: post[index])));
+                            },
+                            child: Container(
+                                height: 95,
+                                child: Row(
                                   // mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
-                                    Wrap(
-                                      children: <Widget>[
-                                        Text(post[index].name ?? "",
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        Icon(
-                                          Icons.insert_invitation,
-                                          color:Colors.grey[700],
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(
-                                          DateFormat.yMMMMd("en_US")
-                                                  .add_jm()
-                                                  .format(DateTime.parse(
-                                                      post[index].time)) ??
-                                              "",
-                                          style: TextStyle(color: Colors.grey[700]),
-                                        )
-                                      ],
-                                    ),
-                                    Text(post[index].message ?? " ",
-                                            maxLines: 1,
-                                            style: TextStyle(
-                                                fontFamily: "Pyidaungsu",
-                                                fontSize: 13.5,
-                                               )),
-                                    SizedBox(
-                                      height: 17,
-                                    ),
-                                    SizedBox(
-                                      height: 1.0,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
                                       child: Container(
-                                        color: Theme.of(context).brightness ==
-                                                Brightness.light
-                                            ? Colors.black54
-                                            : Colors.white,
+                                          height: 90,
+                                          width: 90,
+                                          child: Image.network(
+                                            post[index].picture ?? "",
+                                            fit: BoxFit.cover,
+                                          )),
+                                    ),
+                                    Flexible(
+                                      child: Column(
+                                        // mainAxisAlignment: MainAxisAlignment.start,
+                                        children: <Widget>[
+                                          Wrap(
+                                            children: <Widget>[
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                    post[index].name ?? "",
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              Icon(
+                                                Icons.insert_invitation,
+                                                color: Colors.grey[700],
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              Text(
+                                                DateFormat.yMMMMd("en_US")
+                                                        .add_jm()
+                                                        .format(DateTime.parse(
+                                                            post[index]
+                                                                .time)) ??
+                                                    "",
+                                                style: TextStyle(
+                                                    color: Colors.grey[700]),
+                                              )
+                                            ],
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child:
+                                                Text(post[index].message ?? " ",
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                      fontFamily: "Pyidaungsu",
+                                                      fontSize: 13.5,
+                                                    )),
+                                          ),
+                                          SizedBox(
+                                            height: 17,
+                                          ),
+                                          SizedBox(
+                                            height: 1.0,
+                                            child: Container(
+                                              color: Theme.of(context)
+                                                          .brightness ==
+                                                      Brightness.light
+                                                  ? Colors.black54
+                                                  : Colors.white,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    )
+                                    ),
                                   ],
-                                ),
-                              ),
-                            ],
-                          )),
+                                )),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-      ),
+            ),
     );
   }
 }
