@@ -69,11 +69,11 @@ class _PostDetailState extends State<PostDetail> {
                     boxShadow: [BoxShadow(blurRadius: 1.0)]),
                 child: Column(
                   children: <Widget>[
-                       Container(
+                    widget.data.fullpicture != null ? Container(
                           child: Image.network(
                         widget.data.fullpicture ?? "",
                         fit: BoxFit.cover,
-                      )),
+                      )) : Container(),
                    
                     SizedBox(
                       height: 10,
@@ -85,12 +85,12 @@ class _PostDetailState extends State<PostDetail> {
                         
                           Wrap(
                             children: <Widget>[
-                              Text(
+                             widget.data.name != null ? Text(
                                 widget.data.name ?? "",
                                 
                                 style: TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.normal),
-                              ),
+                              ) : Container(),
                             ],
                           ),
                    
@@ -104,12 +104,12 @@ class _PostDetailState extends State<PostDetail> {
                       child: Container(
                         child: Row(
                           children: <Widget>[
-                            Icon(Icons.insert_invitation,color: Colors.black54,),
+                            Icon(Icons.insert_invitation,color:Theme.of(context).brightness == Brightness.light ? Colors.black38:Colors.white60,),
                             SizedBox(
                               width: 10,
                             ),
                             
-                            Text(DateFormat.yMMMMd("en_US").add_jm().format(DateTime.parse(widget.data.time)) ?? "",style: TextStyle(color:Colors.black54),)
+                            Text(DateFormat.yMMMMd("en_US").add_jm().format(DateTime.parse(widget.data.time)) ?? "",style: TextStyle(color:Theme.of(context).brightness == Brightness.light ? Colors.black38:Colors.white60),)
                           ],
                         ),
                       ),

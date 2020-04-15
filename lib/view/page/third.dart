@@ -182,7 +182,7 @@ class _ThirdState extends State<Third> {
                       child: Container(
                           height: 95,
                           child: Row(
-                            // mainAxisAlignment: MainAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -196,7 +196,7 @@ class _ThirdState extends State<Third> {
                               ),
                               Flexible(
                                 child: Column(
-                                  // mainAxisAlignment: MainAxisAlignment.,
+                                  // mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
                                     Wrap(
                                       children: <Widget>[
@@ -225,17 +225,12 @@ class _ThirdState extends State<Third> {
                                         )
                                       ],
                                     ),
-                                    Wrap(
-                                      children: <Widget>[
-                                        Text(post[index].message ?? " ",
+                                    Text(post[index].message ?? " ",
                                             maxLines: 1,
-                                            // textAlign: TextAlign.left,
                                             style: TextStyle(
                                                 fontFamily: "Pyidaungsu",
                                                 fontSize: 13.5,
                                                )),
-                                      ],
-                                    ),
                                     SizedBox(
                                       height: 17,
                                     ),
