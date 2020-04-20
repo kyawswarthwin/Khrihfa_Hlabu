@@ -59,7 +59,7 @@ class _SearchBarState extends State<SearchBar> {
         child: Padding(
           padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
           child: Container(
-            height: 45.0,
+            height: 44.0,
             decoration: BoxDecoration(
                 color: Colors.white, boxShadow: [BoxShadow(blurRadius: 0.8)]),
             child: Row(
@@ -85,7 +85,8 @@ class _SearchBarState extends State<SearchBar> {
                             : Colors.black,
                       ),
                 Expanded(
-                  child: TextField(
+                  child:
+                   TextField(
                     focusNode: _focusNode,
                     style: TextStyle(color: Colors.black),
                     textInputAction: TextInputAction.search,
@@ -94,6 +95,7 @@ class _SearchBarState extends State<SearchBar> {
                         border: InputBorder.none,
                         hintText: "Search",
                         hintStyle: TextStyle(
+                          fontSize: 14.5,
                             color:
                                 Theme.of(context).brightness == Brightness.light
                                     ? Colors.black26

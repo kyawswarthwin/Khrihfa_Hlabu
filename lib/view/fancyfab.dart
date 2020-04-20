@@ -1,8 +1,10 @@
+import 'package:app/controller/multiSong.dart';
 import 'package:app/model/song.dart';
-import 'package:app/util/playstate.dart';
+// import 'package:app/util/playstate.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 
 class FancyFab extends StatefulWidget {
   final Song song;
@@ -21,40 +23,12 @@ class _FancyFabState extends State<FancyFab>
   Animation<double> _translateButton;
   Curve _curve = Curves.easeOut;
   double _fabHeight = 56.0;
-
-  AudioPlayer audioPlayer;
-  PlayerState _playerState1 = PlayerState.stopped;
-  PlayerState _playerState2 = PlayerState.stopped;
-  get _isPlaying1 => _playerState1 == PlayerState.playing;
-  get _isPlaying2 => _playerState2 == PlayerState.playing;
-
-  Future<int> _play(String url) async {
-    final result = await audioPlayer.play(url);
-    if (result == 1) setState(() => _playerState1 = PlayerState.playing);
-    return result;
-  }
-
-  Future<int> _pause() async {
-    final result = await audioPlayer.pause();
-    if (result == 1) setState(() => _playerState1 = PlayerState.paused);
-    return result;
-  }
-
-  Future<int> _play2(String url) async {
-    final result = await audioPlayer.play(url);
-    if (result == 1) setState(() => _playerState2 = PlayerState.playing);
-    return result;
-  }
-
-  Future<int> _pause2() async {
-    final result = await audioPlayer.pause();
-    if (result == 1) setState(() => _playerState2 = PlayerState.paused);
-    return result;
-  }
+final songControl = MultiSong();
 
   @override
   initState() {
-    audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+    songControl.audioPlayer1 = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+    songControl.audioPlayer2 = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500))
           ..addListener(() {
@@ -79,8 +53,8 @@ class _FancyFabState extends State<FancyFab>
   @override
   dispose() {
     _animationController.dispose();
-    audioPlayer.stop();
-    audioPlayer.dispose();
+    songControl.audioPlayer1.stop();
+    songControl.audioPlayer2.stop();
     super.dispose();
   }
 
@@ -95,15 +69,16 @@ class _FancyFabState extends State<FancyFab>
   }
 
   Widget song1() {
+    final song = Provider.of<MultiSong>(context);
     return Container(
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () {},
         child: IconButton(
-          icon: _isPlaying1 ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-          onPressed: _isPlaying2
+          icon: song.isPlaying1 ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+          onPressed: song.isPlaying2
               ? () {}
-              : _isPlaying1 ? () => _pause() : () => _play(widget.song.song1),
+              : song.isPlaying1 ? () => song.pause1() : () => song.play1(widget.song.song1),
           color: Theme.of(context).brightness == Brightness.light
               ? Colors.white
               : Colors.black,
@@ -116,15 +91,16 @@ class _FancyFabState extends State<FancyFab>
   }
 
   Widget song2() {
+    final song = Provider.of<MultiSong>(context);
     return Container(
       child: FloatingActionButton(
         heroTag: null,
         onPressed: () {},
         child: IconButton(
-          icon: _isPlaying2 ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-          onPressed: _isPlaying1
+          icon: song.isPlaying2 ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+          onPressed: song.isPlaying1
               ? () {}
-              : _isPlaying2 ? () => _pause2() : () => _play2(widget.song.song2),
+              : song.isPlaying2 ? () => song.pause2() : () => song.play2(widget.song.song2),
           color: Theme.of(context).brightness == Brightness.light
               ? Colors.white
               : Colors.black,
@@ -139,7 +115,6 @@ class _FancyFabState extends State<FancyFab>
   Widget toggle() {
     return Container(
       child: FloatingActionButton(
-
         heroTag: null,
         backgroundColor: Theme.of(context).brightness == Brightness.light
             ? Colors.black

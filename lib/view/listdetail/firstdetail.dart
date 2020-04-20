@@ -1,7 +1,11 @@
-import 'dart:io';
+import 'dart:convert';
 
 import 'package:app/controller/controller.dart';
 import 'package:app/model/song.dart';
+import 'package:app/util/playstate.dart';
+import '../../controller/adControl.dart';
+import '../../controller/normalSong.dart';
+import '../../controller/multiSong.dart';
 import 'package:app/util/customicon.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
@@ -12,9 +16,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:provider/provider.dart';
-import '../../util/playstate.dart';
-import 'dart:convert';
-
 import '../fancyfab.dart';
 
 class FirstDetail extends StatefulWidget {
@@ -28,29 +29,15 @@ class FirstDetail extends StatefulWidget {
 }
 
 class _FirstDetailState extends State<FirstDetail> {
-  var jsonSong =
-      '[{"song1":"https://luan.xyz/files/audio/nasa_on_a_mission.mp3"},{"song1":"https://luan.xyz/files/audio/nasa_on_a_mission.mp3","song2":"https://luan.xyz/files/audio/nasa_on_a_mission.mp3"}]';
-  List songs = List<Song>();
+  final adControl = AdControl();
+  final normalSong = NormalSong();
+  final multiSong = MultiSong();
   double fontSize = 11.0;
   String _text;
-  AudioPlayer audioPlayer;
-  PlayerState _playerState = PlayerState.stopped;
-  get _isPlaying => _playerState == PlayerState.playing;
   BannerAd _bannerAd;
-  @override
-  void initState() {
-    super.initState();
-    Control().getShare();
-    getText();
-    audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
-    getSong();
-     _bannerAd = createBannerAdUnitId()..load();
-  }
-
-  getSong() {
-    var datas = json.decode(jsonSong);
-    songs = datas.map((data) => Song.fromJson(data)).toList();
-  }
+   List songList = List<Song>();
+   var jsonSong =
+      '[{"song1":"https://luan.xyz/files/audio/nasa_on_a_mission.mp3"},{"song1":"https://luan.xyz/files/audio/nasa_on_a_mission.mp3","song2":"https://luan.xyz/files/audio/nasa_on_a_mission.mp3"}]';
 
   void getText() async {
     String text =
@@ -59,35 +46,45 @@ class _FirstDetailState extends State<FirstDetail> {
       _text = text;
     });
   }
-
-  Future<int> _play() async {
-    final result = await audioPlayer.play(songs[0].song1);
-    if (result == 1) setState(() => _playerState = PlayerState.playing);
-    return result;
+    getSong() {
+    var datas = json.decode(jsonSong);
+    songList = datas.map((data) => Song.fromJson(data)).toList();
   }
+    
 
-  Future<int> _pause() async {
-    final result = await audioPlayer.pause();
-    if (result == 1) setState(() => _playerState = PlayerState.paused);
-    return result;
+
+
+  @override
+  void initState() {
+    super.initState();
+    Control().getShare();
+    getText();
+    normalSong.audioPlayer = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+    multiSong.audioPlayer1 = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+    multiSong.audioPlayer2 = AudioPlayer(mode: PlayerMode.MEDIA_PLAYER);
+    getSong();
+     _bannerAd = adControl.createBannerAdUnitId()..load();
   }
 
   @override
   void dispose() {
     super.dispose();
     _bannerAd.dispose();
-setState(() {
-      audioPlayer.stop();
-    audioPlayer.dispose();
-});
+  normalSong.playerState = PlayerState.stopped;
+      normalSong.audioPlayer.stop();
+       multiSong.playerState1 = PlayerState.stopped;
+       multiSong.playerState2 = PlayerState.stopped;
+      multiSong.audioPlayer1.stop();
+      multiSong.audioPlayer2.stop();
   }
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAdMob.instance.initialize(appId: getAppId()).then((response){
+    FirebaseAdMob.instance.initialize(appId: adControl.getAppId()).then((response){
 _bannerAd..load()..show(anchorOffset: 80.0,anchorType: AnchorType.top);
     });
     final bm = Provider.of<Control>(context);
+    final normal = Provider.of<NormalSong>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text("${widget.id}"),
@@ -200,14 +197,14 @@ _bannerAd..load()..show(anchorOffset: 80.0,anchorType: AnchorType.top);
           ),
         ),
       ),
-      floatingActionButton: songs[1].song2 != null
-          ? FancyFab(song: songs[1])
+      floatingActionButton: songList[1].song2 != null
+          ? FancyFab(song:songList[1])
           : FloatingActionButton(
               onPressed: () {
               },
               child: IconButton(
-                icon: _isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
-                onPressed: _isPlaying ? () => _pause() : () => _play(),
+                icon: normal.isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+                onPressed: normal.isPlaying ? () => normal.pause() : () =>normal.play(songList[0].song1),
                 color: Theme.of(context).brightness == Brightness.light
                     ? Colors.white
                     : Colors.black,
@@ -219,40 +216,5 @@ _bannerAd..load()..show(anchorOffset: 80.0,anchorType: AnchorType.top);
     );
   }
 }
-String getAppId() {
-  if (Platform.isIOS) {
-    return "ca-app-pub-8032453967263891~9118748177";
-  } else if (Platform.isAndroid) {
-    return "ca-app-pub-8032453967263891~1572959323";
-  }
-  return null;
-}
 
-String getBannerAdUnitId() {
-  if (Platform.isIOS) {
-    return "ca-app-pub-8032453967263891/3339614362";
-  } else if (Platform.isAndroid) {
-    return "ca-app-pub-8032453967263891/1381387636";
-  }
-  return null;
-}
-MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  keywords: <String>['flutterio', 'beautiful apps'],
-  contentUrl: 'https://flutter.io',
-  // birthday: DateTime.now(),
-  childDirected: false,
-  // designedForFamilies: false,
-  // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
-  testDevices: <String>[], // Android emulators are considered test devices
-);
 
-BannerAd createBannerAdUnitId(){
-  return BannerAd(
-  adUnitId: getBannerAdUnitId(),
-  size: AdSize.smartBanner,
-  targetingInfo: targetingInfo,
-  listener: (MobileAdEvent event) {
-    print("BannerAd event is $event");
-  },
-);
-}

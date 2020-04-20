@@ -2,6 +2,7 @@ import 'package:app/database/hymnsdatabasehelp.dart';
 import 'package:app/database/responsivedatabasehelper.dart';
 import 'package:app/util/draweselection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/data.dart';
 
@@ -19,6 +20,7 @@ class Control extends ChangeNotifier {
   List<String> firstBookmark = [];
   List<String> secondBookmark = [];
   TabController controller;
+ bool isBookMark = false;
 
   DrawerSelection drawerSelect = DrawerSelection.first;
   factory Control() {
@@ -27,7 +29,6 @@ class Control extends ChangeNotifier {
   }
   static Control _this;
   Control._() : super();
-  // static Control get con => _this;
 
   getDrawerSelection(DrawerSelection drawerSelection) {
     drawerSelect = drawerSelection;
@@ -48,7 +49,6 @@ class Control extends ChangeNotifier {
     firstItemList.clear();
     items.forEach((item) {
       firstItemList.add(Data.fromMap(item));
-
       notifyListeners();
     });
   }
@@ -57,7 +57,6 @@ class Control extends ChangeNotifier {
     List items = await secondDatabaseHelper.getAllData();
     items.forEach((item) {
       secondItemList.add(Data.fromMap(item));
-      
       notifyListeners();
     });
   }

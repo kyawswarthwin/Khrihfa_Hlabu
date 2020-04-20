@@ -17,8 +17,10 @@ class First extends StatefulWidget {
 }
 
 class _FirstState extends State<First> {
+  final control = new Control();
   @override
   void dispose() {
+    control.dispose();
     super.dispose();
   }
 
@@ -26,7 +28,7 @@ class _FirstState extends State<First> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: TabBarView(
-        controller:Control().controller ,
+        controller:control.controller ,
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[FirstTab1(), FirstTab2()]),
     );

@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import '../controller/adControl.dart';
 import 'package:app/util/draweselection.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
@@ -22,29 +21,33 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
   String appBarTitle = "Khrihfa Hlabu";
   Widget currentPage;
   InterstitialAd _interstitialAd;
+  final control =new Control();
+  final adControl = new AdControl();
   @override
   void initState() {
     super.initState();
-    Control().controller = TabController(length: 2, vsync: this);
-    Control().controller.addListener((){
+    control.controller = TabController(length: 2, vsync: this);
+    control.controller.addListener((){
       setState(() {      
       });
     });
     currentPage = First();
     setState(() {
-      Control().createListfirst();
-      Control().createListsecond();
-      Control().getShare();
+     control.createListfirst();
+     control.createListsecond();
+      control.getShare();
     });
-    Control().firstShowdata = Control().firstItemList;
-    Control().secondShowData = Control().secondItemList;
-      FirebaseAdMob.instance.initialize(appId: getAppId());
-    _interstitialAd = createInterstitialAd()..load();
+    control.firstShowdata = control.firstItemList;
+    control.secondShowData = control.secondItemList;
+      FirebaseAdMob.instance.initialize(appId: adControl.getAppId());
+    _interstitialAd = adControl.createInterstitialAd()..load();
   }
+  
   @override
   void dispose() {
+    _interstitialAd.dispose();
     super.dispose();
-    Control().controller.dispose();
+    control.controller.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -77,17 +80,17 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
                           : Colors.transparent,
                   colorBrightness: Brightness.light,
                   onPressed: () {
-                    _interstitialAd?.dispose();
-                    _interstitialAd ??= createInterstitialAd();
-                    _interstitialAd..load()..show();
+                     _interstitialAd.dispose();
+                      _interstitialAd = adControl.createInterstitialAd();
+                      _interstitialAd..load()..show();
                     currentPage = First();
                     Navigator.pop(context);
-                    Control().getDrawerSelection(DrawerSelection.first);
+                   control.getDrawerSelection(DrawerSelection.first);
                     _drawerSelection = DrawerSelection.first;
-                    Control().controller.animateTo(0);
+                   control.controller.animateTo(0);
                     setState(() {
                       appBarTitle = "Khrihfa Hlabu";
-                     
+                     control.isBookMark = false;
                     });
                   },
                   child: Center(
@@ -118,18 +121,17 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
                           ? Colors.white
                           : Colors.transparent,
                   onPressed: () {
-                    _interstitialAd?.dispose();
-                    _interstitialAd ??= createInterstitialAd();
-                    _interstitialAd..load()..show();
+                      _interstitialAd.dispose();
+                      _interstitialAd = adControl.createInterstitialAd();
+                      _interstitialAd..load()..show();
                     currentPage = Second();
                     Navigator.pop(context);
                     _drawerSelection = DrawerSelection.second;
-                    Control().getDrawerSelection(DrawerSelection.second);
-                     Control().controller.animateTo(0);
+                  control.getDrawerSelection(DrawerSelection.second);
+                    control.controller.animateTo(0);
                     setState(() {
-                  
                       appBarTitle = "Chawnghlang Relnak";
-                      
+                       control.isBookMark = false;
                     });
                   },
                   child: Center(
@@ -160,9 +162,9 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
                           ? Colors.white
                           : Colors.transparent,
                   onPressed: () {
-                    _interstitialAd?.dispose();
-                    _interstitialAd ??= createInterstitialAd();
-                    _interstitialAd..load()..show();
+                     _interstitialAd.dispose();
+                      _interstitialAd = adControl.createInterstitialAd();
+                      _interstitialAd..load()..show();
                     currentPage = Third();
                     Navigator.pop(context);
                     _drawerSelection = DrawerSelection.third;
@@ -198,9 +200,9 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
                           ? Colors.white
                           : Colors.transparent,
                   onPressed: () {
-                    _interstitialAd?.dispose();
-                    _interstitialAd ??= createInterstitialAd();
-                    _interstitialAd..load()..show();
+                     _interstitialAd.dispose();
+                      _interstitialAd = adControl.createInterstitialAd();
+                      _interstitialAd..load()..show();
                     currentPage = About();
                     Navigator.pop(context);
                     _drawerSelection = DrawerSelection.about;
@@ -231,39 +233,3 @@ class _HomeState extends State<Home>with SingleTickerProviderStateMixin {
     );
   }
 }
-String getAppId() {
-  if (Platform.isIOS) {
-    return "ca-app-pub-8032453967263891~9118748177";
-  } else if (Platform.isAndroid) {
-    return "ca-app-pub-8032453967263891~1572959323";
-  }
-  return null;
-}
-
-String getInterstitialAdUnitId() {
-  if (Platform.isIOS) {
-    return "ca-app-pub-8032453967263891/5179503167";
-  } else if (Platform.isAndroid) {
-    return "ca-app-pub-8032453967263891/5145017606";
-  }
-  return null;
-}
-
-InterstitialAd createInterstitialAd() {
-    return InterstitialAd(
-      adUnitId: getInterstitialAdUnitId(),
-      targetingInfo: targetingInfo,
-      listener: (MobileAdEvent event) {
-        print("InterstitialAd event $event");
-      },
-    );
-  }
-MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  keywords: <String>['flutterio', 'beautiful apps'],
-  contentUrl: 'https://flutter.io',
-  // birthday: DateTime.now(),
-  childDirected: false,
-  // designedForFamilies: false,
-  // gender: MobileAdGender.male, // or MobileAdGender.female, MobileAdGender.unknown
-  testDevices: <String>[], // Android emulators are considered test devices
-);

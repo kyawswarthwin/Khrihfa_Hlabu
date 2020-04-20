@@ -13,8 +13,10 @@ class Second extends StatefulWidget {
 }
 
 class _SecondState extends State<Second> {
+  final control = new Control();
 @override
   void dispose() {
+    control.dispose();
     super.dispose();
   }
   @override
@@ -22,7 +24,7 @@ class _SecondState extends State<Second> {
 
     return Scaffold(
       body: new TabBarView(
-        controller: Control().controller,
+        controller: control.controller,
         physics: NeverScrollableScrollPhysics(),
         children: <Widget>[SecondTab1(), SecondTab2()],
       ),

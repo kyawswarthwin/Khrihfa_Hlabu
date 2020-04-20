@@ -25,7 +25,7 @@ class DefaultAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _DefaultAppBarState extends State<DefaultAppBar> {
   bool isInSearchMode = false;
-  bool isBookMark = false;
+
   @override
   void initState() {
     super.initState();
@@ -53,8 +53,8 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
         ),
         actions: <Widget>[
           (widget.drawerSelection == DrawerSelection.first ||
-                      widget.drawerSelection == DrawerSelection.second) &&
-                  (isBookMark == false)
+                      widget.drawerSelection == DrawerSelection.second ) &&
+                Control().isBookMark == false
               ? IconButton(
                   onPressed: onScarchChange,
                   icon: Icon(Icons.search),
@@ -79,9 +79,10 @@ class _DefaultAppBarState extends State<DefaultAppBar> {
                 onTap: (value) {
                   setState(() {
                     if (value == 1) {
-                      isBookMark = true;
-                    } else {
-                      isBookMark = false;
+                        Control().isBookMark = true;
+                    }
+                     else {
+                      Control().isBookMark = false;
                     }
                   });
                 },

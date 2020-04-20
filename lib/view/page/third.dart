@@ -182,7 +182,6 @@ class _ThirdState extends State<Third> {
                             child: Container(
                                 height: 95,
                                 child: Row(
-                                  // mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -196,41 +195,39 @@ class _ThirdState extends State<Third> {
                                     ),
                                     Flexible(
                                       child: Column(
-                                        // mainAxisAlignment: MainAxisAlignment.start,
                                         children: <Widget>[
-                                          Wrap(
-                                            children: <Widget>[
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                    post[index].name ?? "",
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold)),
-                                              ),
-                                            ],
-                                          ),
-                                          Row(
-                                            children: <Widget>[
-                                              Icon(
-                                                Icons.insert_invitation,
-                                                color: Colors.grey[700],
-                                              ),
-                                              SizedBox(
-                                                width: 10,
-                                              ),
-                                              Text(
-                                                DateFormat.yMMMMd("en_US")
-                                                        .add_jm()
-                                                        .format(DateTime.parse(
-                                                            post[index]
-                                                                .time)) ??
-                                                    "",
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(post[index].name ?? "",
+                                                maxLines: 1,
                                                 style: TextStyle(
-                                                    color: Colors.grey[700]),
-                                              )
-                                            ],
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Row(
+                                              children: <Widget>[
+                                                Icon(
+                                                  Icons.insert_invitation,
+                                                  color: Colors.grey[700],
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                Text(
+                                                  DateFormat.yMMMMd("en_US")
+                                                          .add_jm()
+                                                          .format(
+                                                              DateTime.parse(
+                                                                  post[index]
+                                                                      .time)) ??
+                                                      "",
+                                                  style: TextStyle(
+                                                      color: Colors.grey[700]),
+                                                )
+                                              ],
+                                            ),
                                           ),
                                           Align(
                                             alignment: Alignment.centerLeft,
